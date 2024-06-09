@@ -1,4 +1,4 @@
-import 'package:newsapp/model/categories.dart';
+import 'package:newsapp/models/categories.dart';
 
 class News {
   final String source;

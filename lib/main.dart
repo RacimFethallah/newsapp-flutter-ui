@@ -1,7 +1,7 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
-import 'package:newsapp/model/categories.dart';
-import 'package:newsapp/model/news.dart';
+import 'package:newsapp/models/categories.dart';
+import 'package:newsapp/models/news.dart';
 
 void main() {
   runApp(const MyApp());
@@ -164,7 +164,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     return Container(
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          opacity: 0.5,
                           fit: BoxFit.cover,
                           image: AssetImage(
                             newsList[index].urlToImage!,
