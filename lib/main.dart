@@ -31,24 +31,24 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-
   final List<News> newsList = [
     News(
       source: 'BBC',
       author: 'John Doe',
       title: 'The world is ending',
       description: 'The world is ending',
+      category: Categories(name: 'Sports'),
       url: 'https://www.bbc.com/news/world-asia-china-57641900',
       urlToImage: 'assets/news1.jpg',
       publishedAt: '2022-01-01',
       content: 'The world is ending',
     ),
     News(
-      source: 'BBC',
+      source: 'Google News',
       author: 'John Doe',
       title: 'The world is ending',
       description: 'The world is ending',
+      category: Categories(name: 'Entertainment'),
       url: 'https://www.bbc.com/news/world-asia-china-57641900',
       urlToImage: 'assets/news2.jpg',
       publishedAt: '2022-01-01',
@@ -57,15 +57,37 @@ class _MyHomePageState extends State<MyHomePage> {
     News(
       source: 'BBC',
       author: 'John Doe',
-      title: 'The world is ending',
+      title: '',
       description: 'The world is ending',
+      category: Categories(name: 'Business'),
+      url: 'https://www.bbc.com/news/world-asia-china-57641900',
+      urlToImage: 'assets/news3.jpg',
+      publishedAt: '2022-01-01',
+      content: 'The world is ending',
+    ),
+    News(
+      source: 'BBC',
+      author: 'John Doe',
+      title: '',
+      description: 'The world is ending',
+      category: Categories(name: 'Business'),
+      url: 'https://www.bbc.com/news/world-asia-china-57641900',
+      urlToImage: 'assets/news3.jpg',
+      publishedAt: '2022-01-01',
+      content: 'The world is ending',
+    ),
+    News(
+      source: 'BBC',
+      author: 'John Doe',
+      title: '',
+      description: 'The world is ending',
+      category: Categories(name: 'Business'),
       url: 'https://www.bbc.com/news/world-asia-china-57641900',
       urlToImage: 'assets/news3.jpg',
       publishedAt: '2022-01-01',
       content: 'The world is ending',
     ),
   ];
-  
 
   final List<Categories> categories = [
     Categories(name: 'All'),
@@ -80,17 +102,19 @@ class _MyHomePageState extends State<MyHomePage> {
     Categories(name: 'Culture'),
   ];
 
+  Categories selectedCategory = Categories(name: 'All');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 32.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              const SizedBox(height: 32),
               Row(
                 children: [
                   const CircleAvatar(
@@ -110,7 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ],
                   ),
                   const Spacer(),
-                  IconButton(onPressed: () {}, icon: Icon(Icons.search)),
+                  IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
                   IconButton(
                       onPressed: () {},
                       icon: const Icon(Icons.circle_notifications_rounded))
@@ -133,13 +157,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
               const SizedBox(height: 16),
-              Container(
+              SizedBox(
                 height: 200,
                 child: Swiper(
                   itemBuilder: (BuildContext context, int index) {
                     return Container(
                       decoration: BoxDecoration(
                         image: DecorationImage(
+                          opacity: 0.5,
                           fit: BoxFit.cover,
                           image: AssetImage(
                             newsList[index].urlToImage!,
@@ -154,30 +179,52 @@ class _MyHomePageState extends State<MyHomePage> {
                   scale: 0.9,
                 ),
               ),
-              const SizedBox(height: 50),
+              const SizedBox(height: 24),
+              // Categories Filter
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: categories.map((category) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      child: Container(
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedCategory = category;
+                        });
+                      },
+                      child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 12.0, vertical: 6.0),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        child: Text(
-                          category.name,
-                          style: const TextStyle(fontSize: 16.0),
+                            horizontal: 4.0, vertical: 12.0),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12.0, vertical: 6.0),
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                blurRadius: 10,
+                                offset: const Offset(0, 2),
+                              )
+                            ],
+                            color: selectedCategory.name == category.name
+                                ? Colors.blue
+                                : Colors.grey[300],
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          child: Text(
+                            category.name,
+                            style: TextStyle(
+                                fontSize: 16.0,
+                                color: selectedCategory.name == category.name
+                                    ? Colors.white
+                                    : Colors.black),
+                          ),
                         ),
                       ),
                     );
                   }).toList(),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
               const Row(
                 children: [
                   Text('For You',
@@ -196,19 +243,58 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(height: 16),
               Expanded(
                 child: ListView.builder(
-                  itemCount: 3,
+                  itemCount: newsList.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      // height: 200,
-                      margin: const EdgeInsets.only(bottom: 16),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const ListTile(
-                        title: Text('News Title'),
-                        subtitle: Text('News Subtitle'),
-                      ),
-                    );
+                    return selectedCategory.name == 'All' ||
+                            selectedCategory.name ==
+                                newsList[index].category.name
+                        ? Container(
+                            height: 100,
+                            margin: const EdgeInsets.only(bottom: 16),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Image.asset(
+                                  newsList[index].urlToImage!,
+                                  width: 100,
+                                  height: 100,
+                                  fit: BoxFit.cover,
+                                ),
+                                const SizedBox(width: 16),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(newsList[index].source),
+                                      Text(newsList[index].title),
+                                      const Spacer(),
+                                      Text(newsList[index].author),
+                                    ],
+                                  ),
+                                ),
+                                const Spacer(),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(newsList[index].category.name),
+                                      const Spacer(),
+                                      Text(newsList[index].publishedAt)
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        : Container();
                   },
                 ),
               ),
